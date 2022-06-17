@@ -4,7 +4,7 @@ import cv2.aruco as aruco
 import math
 
 
-def findAruco(image):                                                  #Function to find ID & slope of given rotated Aruco Markers
+def findAruco(image):                                                  #Function to find ID & slope of given of a side of  Aruco Markers
     gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
     key=getattr(aruco,f'DICT_5X5_250')
     arucoDict=aruco.Dictionary_get(key)
@@ -27,7 +27,7 @@ def findAruco(image):                                                  #Function
             bottomRight=(int(bottomRight[0]),int(bottomRight[1]))
 
 
-            dy=topRight[1]-bottomRight[1]
+            dy=topRight[1]-bottomRight[1]                                  #To find slope of a side of Aruco 
             dx=topRight[0]-bottomRight[0]
             slope=0
             if dx==0:
@@ -63,7 +63,7 @@ def Arucocorners(image):               #Function to find corners of Aruco Marker
 
 
 
-            intcorn=(topLeft,topRight,bottomRight,bottomLeft)
+            intcorn=(topLeft,topRight,bottomRight,bottomLeft)                  #Store corners of Aruco Marker
         
     return(intcorn)
   
@@ -80,7 +80,7 @@ cont, hier = cv2.findContours(canny,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)   #Fi
 img2 = img.copy()
 centercorn={}
 shapeAngle={}
-c=1             #Counter to keep count of the square contours detected
+c=1             #Counter to keep count of the squares detected
 
 for cnt in cont:                                               #To detect squares
     if cv2.contourArea(cnt) > 10000:
@@ -136,7 +136,7 @@ files=["1.jpg","2.jpg","3.jpg","4.jpg"]      #List storing File names of the Aru
 arid={}
 slope1=[]
 
-c=0
+
 for i in files:
     imga=cv2.imread(i)
     arid[i],x=findAruco(imga)                     #Storing ArucoID in a dictionary
@@ -165,9 +165,9 @@ for j in range(0,4):
     
     
     rotn=rot[min(int(corner[j][0][1]),int(corner[j][1][1])) : max(int(corner[j][2][1]),int(corner[j][3][1])) , min(int(corner[j][0][0]),int(corner[j][3][0])) : max(int(corner[j][1][0]),int(corner[j][2][0]))]
-                                                                     #Trimming the ArucoMarkers using corner values
-    arucoid[int(arid[files[j]])]=rotn                                #A dictionary to store Aruco ID : Trimmed Aruco Marker
-    cv2.imshow(str(arid[files[j]]),rotn)                             #Display the finally reoriented and trimmed Aruco Markers
+                                                                     #Cropping the ArucoMarkers using corner values
+    arucoid[int(arid[files[j]])]=rotn                                #A dictionary to store Aruco ID : Cropped Aruco Marker
+    cv2.imshow(str(arid[files[j]]),rotn)                             #Display the finally reoriented and cropped Aruco Markers
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -177,7 +177,8 @@ for j in range(0,4):
 
 imgm=cv2.imread("CVtask.jpg")                                         #Opening the given image
 img3=cv2.resize(imgm,(0,0),fx=0.5,fy=0.5)                             #Resizing the image to make it optimum for viewing on screen
-cv2.imshow("Original Image",img3)
+print(img3.shape)                                                     #Shape of image after resizing was (620,877,3)
+cv2.imshow("Original Image",img3)                                    
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
@@ -187,10 +188,11 @@ for i in range(1,5):
             blank = np.zeros([1300,1300,3],dtype =np.uint8)            #Creating a blank large image for preventing loss of image during rotation
             blank.fill(255)                                            #To make it white in colour
             blank[100:720,300:1177]=img3                               #Pasting the given image on the blank white image
+                                                                       
 
             
 
-            h,w = blank.shape[:-1]                          #Rotating the image to orient one of the sqaures in vertical orientation
+            h,w = blank.shape[:-1]                          #Rotating the image to orient one of the squares in vertical orientation
             rot_point = w//2, h//2
             ang = shapeAngle[coorid[i]]
             rot_mat = cv2.getRotationMatrix2D(rot_point,ang,1)
@@ -219,7 +221,7 @@ for i in range(1,5):
                         leftbottom = (approx[3][0][0], approx[3][0][1])
                         corn=(lefttop,righttop,rightbottom,leftbottom)         #Storing corners of the detected square
                         
-                        centre=(int((lefttop[0]+rightbottom[0])/2),int((lefttop[1]+rightbottom[1])/2))   #Center of sqaure
+                        centre=(int((lefttop[0]+rightbottom[0])/2),int((lefttop[1]+rightbottom[1])/2))   #Center of square
                         colour=tuple(rot2[centre[1],centre[0]])                                          #Colour of center of square
 
                         
