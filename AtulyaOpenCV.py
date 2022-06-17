@@ -132,7 +132,7 @@ print(arucoCol)                      #Print BGR values: ArucoID
 
 
 
-files=[r"D:\OpenCV\project\1.jpg",r"D:\OpenCV\project\2.jpg",r"D:\OpenCV\project\3.jpg",r"D:\OpenCV\project\4.jpg"]      #List storing File names of the Aruco Markers provided
+files=["1.jpg","2.jpg","3.jpg","4.jpg"]      #List storing File names of the Aruco Markers provided
 arid={}
 slope1=[]
 
@@ -175,7 +175,7 @@ for j in range(0,4):
 
 
 
-imgm=cv2.imread("D:\OpenCV\project\CVtask.jpg")                       #Opening the given image
+imgm=cv2.imread("CVtask.jpg")                                         #Opening the given image
 img3=cv2.resize(imgm,(0,0),fx=0.5,fy=0.5)                             #Resizing the image to make it optimum for viewing on screen
 cv2.imshow("Original Image",img3)
 cv2.waitKey(0)
@@ -224,11 +224,11 @@ for i in range(1,5):
 
                         
                         
-                        ratio1 = abs(float(leftbottom[0]-rightbottom[0])/w1)         #Finding ratio of length of side of square and bounding rectangle
-                        if (ratio1==0):                                              #for vertical line
-                            ratio1=abs(float(leftbottom[0]-lefttop[0])/w1)
+                        ratio = abs(float(leftbottom[0]-rightbottom[0])/w1)         #Finding ratio of length of side of square and bounding rectangle
+                        if (ratio==0):                                              #for vertical line
+                            ratio=abs(float(leftbottom[0]-lefttop[0])/w1)
                         
-                        if (ratio1 < 1.1) and (ratio1> 0.90):                        #Ratio should be near 1 for a sqaure
+                        if (ratio < 1.1) and (ratio> 0.90):                        #Ratio should be near 1 for a square
                              if(arucoCol[colour]==i):                                #If the colour of square matches the corresponding Aruco ID
 
                                 arucorot=cv2.resize(arucoid[i],(w1,h1))               #Resizing the Aruco to fit in the square
